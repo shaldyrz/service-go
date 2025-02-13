@@ -9,7 +9,17 @@ on:
 jobs:
   update-monorepo:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Fetch Image Tag
+        id: get-tag
+        run: |
+          RUN_ID=${{ github.event.workflow_run.id }}
+          IMAGE_TAG=$(gh run view $RUN_ID --json jobs --jq '.jobs[].outputs.image_tag')
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -21,16 +31,13 @@ jobs:
         run: |
           git clone git@github.com:shaldyrz/monorepo-gitops.git
           cd monorepo-gitops
-
-      - name: Extract Image Tag
-        run: |
-          IMAGE_TAG=${{ github.event.workflow_run.head_sha }}
-          IMAGE_SHORT=$(echo $IMAGE_TAG | cut -c1-7)
-          echo "IMAGE_SHORT=$IMAGE_SHORT" >> $GITHUB_ENV
+          ls -lah
 
       - name: Modify deployment.yaml with sed
         run: |
-          sed -i 's|image: shaldyrz/service-go:.*|image: shaldyrz/service-go:'"${IMAGE_SHORT}"'|' monorepo-gitops/staging/infrastructure-team/service-go/deployment.yaml
+          pwd
+          ls -lah
+          sed -i 's|image: shaldyrz/service-go:.*|image: shaldyrz/service-go:'"${IMAGE_TAG}"'|' monorepo-gitops/staging/infrastructure-team/service-go/deployment.yaml
 
       - name: Commit and Push Changes
         run: |
@@ -38,5 +45,5 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add staging/infrastructure-team/service-go/deployment.yaml
-          git commit -m "Auto-update deployment.yaml to image tag $IMAGE_SHORT"
+          git commit -m "Auto-update deployment.yaml to image tag $IMAGE_TAG"
           git push origin main
