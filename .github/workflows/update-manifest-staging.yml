@@ -31,9 +31,11 @@ jobs:
         run: |
           git clone git@github.com:shaldyrz/monorepo-gitops.git
           cd monorepo-gitops
+          ls -lah
 
       - name: Modify deployment.yaml with sed
         run: |
+          pwd
           ls -lah
           sed -i 's|image: shaldyrz/service-go:.*|image: shaldyrz/service-go:'"${IMAGE_TAG}"'|' monorepo-gitops/staging/infrastructure-team/service-go/deployment.yaml
 
