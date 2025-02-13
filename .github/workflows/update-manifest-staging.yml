@@ -42,7 +42,7 @@ jobs:
           ls -lah
           cd monorepo-gitops
           ls -lah
-          sed -i 's|image: shaldyrz/service-go:.*|image: shaldyrz/service-go:'"${IMAGE_TAG}"'|' monorepo-gitops/staging/infrastructure-team/service-go/deployment.yaml
+          sed -i 's|image: shaldyrz/service-go:.*|image: shaldyrz/service-go:'"${IMAGE_TAG}"'|' staging/infrastructure-team/service-go/deployment.yaml
 
       - name: Commit and Push Changes
         run: |
