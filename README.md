@@ -14,7 +14,7 @@ This repository contains the source code and deployment workflows for a Go-based
 ├── Dockerfile                          # Docker build configuration
 ├── go.mod                              # Go module dependencies
 ├── main.go                             # Main application entry point
-├── main_test.go                        # Unit tests for the application
+└── main_test.go                        # Unit tests for the application
 ```
 
 ## 🚀 Getting Started
@@ -27,7 +27,7 @@ This repository contains the source code and deployment workflows for a Go-based
 1. Clone the repository:
    ```sh
    git clone git@github.com:shaldyrz/service-go.git
-   cd service
+   cd service-go
    ```
 2. Build and run the application:
    ```sh
